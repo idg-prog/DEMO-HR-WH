@@ -547,30 +547,47 @@ elif page == "🧠 AI Scoring Demo":
 # ============================================================
 elif page == "🗂️ Talent Pool & Dashboard":
     st.markdown("## 🗂️ Talent Pool & HR Dashboard")
-    st.caption("Structured database  automatically updated by AI analysis of every new CV.")
-
     df = load_candidates()
 
     k1, k2, k3, k4 = st.columns(4)
     k1.markdown(f'<div class="metric-card"><div class="val">{len(df)}</div><div class="lbl">Total Candidates</div></div>', unsafe_allow_html=True)
-    k2.markdown(f'<div class="metric-card"><div class="val">{(df["AI Score"]>=75).sum()}</div><div class="lbl">Score ≥ 75</div></div>', unsafe_allow_html=True)
+    k2.markdown(f'<div class="metric-card"><div class="val">{(df["AI Score"]>=75).sum()}</div><div class="lbl">Qualified (Score > 75)</div></div>', unsafe_allow_html=True)
     k3.markdown(f'<div class="metric-card"><div class="val">{(df["Status"]=="Interview Scheduled").sum()}</div><div class="lbl">Interviews Set</div></div>', unsafe_allow_html=True)
-    k4.markdown(f'<div class="metric-card"><div class="val">{round(df["AI Score"].mean())}</div><div class="lbl">Avg Score</div></div>', unsafe_allow_html=True)
+    k4.markdown(f'<div class="metric-card"><div class="val">{round(df["AI Score"].mean())}%</div><div class="lbl">Avg AI Score</div></div>', unsafe_allow_html=True)
 
-    st.markdown("")
-    f1, f2, f3, f4 = st.columns(4)
-    poste_f = f1.multiselect("Position", sorted(df["Target Position"].unique()))
-    ville_f = f2.multiselect("City", sorted(df["City"].unique()))
-    statut_f = f3.multiselect("Status", sorted(df["Status"].unique()))
-    score_f = f4.slider("Minimum Score", 0, 100, 0)
+    st.markdown("### 📋 All Candidates")
+    # Filters
+    col_f1, col_f2, col_f3 = st.columns(3)
+    p_filter = col_f1.multiselect("Filter by Position", df["Target Position"].unique())
+    s_filter = col_f2.slider("Min AI Score", 0, 100, 30)
+    
+    filtered = df[df["AI Score"] >= s_filter]
+    if p_filter:
+        filtered = filtered[filtered["Target Position"].isin(p_filter)]
 
-    filtered = df.copy()
-    if poste_f: filtered = filtered[filtered["Target Position"].isin(poste_f)]
-    if ville_f: filtered = filtered[filtered["City"].isin(ville_f)]
-    if statut_f: filtered = filtered[filtered["Status"].isin(statut_f)]
-    filtered = filtered[filtered["AI Score"] >= score_f]
-    filtered = filtered.sort_values("AI Score", ascending=False)
+    # RESTORED TABLE
+    st.dataframe(
+        filtered,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "AI Score": st.column_config.ProgressColumn("AI Score", min_value=0, max_value=100, format="%d%%"),
+            "Email": st.column_config.LinkColumn("Email"),
+        }
+    )
 
+    st.markdown("### 🔍 Candidate Detail View")
+    selected_name = st.selectbox("Select a candidate to view detailed analysis", filtered["Name"].tolist())
+    if selected_name:
+        c_data = filtered[filtered["Name"] == selected_name].iloc[0]
+        with st.container():
+            st.markdown(f"""
+            <div class='card'>
+                <h4>{c_data['Name']} - {c_data['Target Position']}</h4>
+                <p>📍 {c_data['City']} | 🎓 {c_data['Degree']} | 💼 {c_data['Experience (yrs)']} years exp.</p>
+                <p><b>AI Status:</b> {c_data['Status']}</p>
+            </div>
+            """, unsafe_allow_html=True)
     
         
 # ============================================================
