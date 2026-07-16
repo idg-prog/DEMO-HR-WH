@@ -371,8 +371,7 @@ if st.sidebar.button("🧠 Try AI Scoring FREE", use_container_width=True):
 # Optional: API Settings for demo purposes
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Presented by **Anas** · DATA & AI Automation Engineer")
-st.sidebar.divider()
+st.sidebar.caption("Presented by **Anas** /nDATA & AI Automation Engineer")
 
 # Contact Buttons
 st.sidebar.link_button(
