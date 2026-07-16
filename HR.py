@@ -532,7 +532,6 @@ elif page == "🧠 AI Scoring Demo":
             with st.expander("📃 Extracted CV Text (preview)"):
                 st.text_area("Extracted Text", value=resume_text, height=200, disabled=True)
 
-    threshold = st.slider("🎯 Auto-recommendation Threshold (min score to propose interview)", 0, 100, 70)
 
     if st.button("🚀 Launch AI Analysis", type="primary", use_container_width=True):
         if not job_desc.strip():
