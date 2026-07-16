@@ -576,19 +576,7 @@ elif page == "🗂️ Talent Pool & Dashboard":
         }
     )
 
-    st.markdown("### 🔍 Candidate Detail View")
-    selected_name = st.selectbox("Select a candidate to view detailed analysis", filtered["Name"].tolist())
-    if selected_name:
-        c_data = filtered[filtered["Name"] == selected_name].iloc[0]
-        with st.container():
-            st.markdown(f"""
-            <div class='card'>
-                <h4>{c_data['Name']} - {c_data['Target Position']}</h4>
-                <p>📍 {c_data['City']} | 🎓 {c_data['Degree']} | 💼 {c_data['Experience (yrs)']} years exp.</p>
-                <p><b>AI Status:</b> {c_data['Status']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
+
         
 # ============================================================
 # PAGE 5  SCHEDULING
