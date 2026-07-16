@@ -371,19 +371,19 @@ if st.sidebar.button("🧠 Try AI Scoring FREE", use_container_width=True):
 # Optional: API Settings for demo purposes
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Presented by **Anas** · AI Automation Engineer\nContact: anaslachhab666@gmail.com \nWhatsapp: +212654615222")
+st.sidebar.caption("Presented by **Anas** · DATA & AI Automation Engineer")
 st.sidebar.divider()
 
 # Contact Buttons
 st.sidebar.link_button(
     "📧 Contact Me",
-    "mailto:your@email.com",
+    "mailto:anaslachhab666@gmail.com",
     use_container_width=True
 )
 
 st.sidebar.link_button(
     "💬 WhatsApp",
-    "https://wa.me/212600000000",  # Replace with your WhatsApp number
+    "https://wa.me/212625810292",  # Replace with your WhatsApp number
     use_container_width=True
 )
 
