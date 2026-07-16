@@ -1,11 +1,4 @@
---- START OF FILE Paste July 16, 2026 - 12:31PM ---
 
-"""
-RecruitAI Pro — AI CV Screening Automation Demo
-Developed for sales demonstration (Recruitment Agencies / HR)
-Author: Anas — AI Automation Engineer
-Demo Stack: Streamlit (Deployable on Streamlit Community Cloud)
-"""
 
 import streamlit as st
 import pandas as pd
