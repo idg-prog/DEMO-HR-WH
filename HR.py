@@ -96,6 +96,7 @@ PRENOMS = ["Youssef", "Salma", "Amine", "Sara", "Karim", "Nour", "Omar", "Imane"
            "Adam", "Hiba", "Rayan", "Lina", "Zakaria", "Kenza", "Ismail", "Douaa", "Anas", "Fatima"]
 NOMS = ["El Amrani", "Bennani", "Chraibi", "Idrissi", "Tazi", "Berrada", "Fassi", "Alaoui", "Cherkaoui", "Lahlou"]
 
+threshold = 75
 
 
 def call_deepseek_api(resume_text, job_desc):
