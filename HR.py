@@ -1,8 +1,10 @@
+--- START OF FILE Paste July 16, 2026 - 12:31PM ---
+
 """
-RecruitAI Pro — Démo d'automatisation de screening CV par IA
-Développé pour démonstration commerciale (cabinets de recrutement / RH)
-Auteur: Anas — AI Automation Engineer
-Stack démo: Streamlit (déployable sur Streamlit Community Cloud)
+RecruitAI Pro — AI CV Screening Automation Demo
+Developed for sales demonstration (Recruitment Agencies / HR)
+Author: Anas — AI Automation Engineer
+Demo Stack: Streamlit (Deployable on Streamlit Community Cloud)
 """
 
 import streamlit as st
@@ -19,7 +21,7 @@ import random
 # PAGE CONFIG
 # ============================================================
 st.set_page_config(
-    page_title="RecruitAI Pro — Screening CV Automatisé",
+    page_title="RecruitAI Pro — Automated CV Screening",
     page_icon="🎯",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -89,14 +91,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================================
-# MOCK DATA — CVTHÈQUE
+# MOCK DATA — TALENT POOL
 # ============================================================
-CITIES = ["Casablanca", "Rabat", "Marrakech", "Tanger", "Dubai", "Abu Dhabi", "Fès", "Agadir"]
-POSTES = ["Développeur Full Stack", "Business Developer", "Comptable Senior", "Chef de Projet IT",
-          "Ingénieur DevOps", "Chargé RH", "Data Analyst", "Responsable Marketing"]
-DIPLOMES = ["Bac+5 Ingénieur", "Master Finance", "Bac+3 Licence Pro", "MBA", "Bac+5 Data Science",
-            "Master RH", "Bac+2 BTS", "Doctorat"]
-STATUTS = ["Nouveau", "Présélectionné", "Entretien programmé", "Rejeté", "Embauché"]
+CITIES = ["Casablanca", "Rabat", "London", "New York", "Dubai", "Abu Dhabi", "Paris", "Singapore"]
+POSTES = ["Full Stack Developer", "Business Developer", "Senior Accountant", "IT Project Manager",
+          "DevOps Engineer", "HR Manager", "Data Analyst", "Marketing Lead"]
+DIPLOMES = ["MSc Engineering", "Master in Finance", "BSc Computer Science", "MBA", "MSc Data Science",
+            "Master in HR", "Associate Degree", "PhD"]
+STATUTS = ["New", "Preselected", "Interview Scheduled", "Rejected", "Hired"]
 PRENOMS = ["Youssef", "Salma", "Amine", "Sara", "Karim", "Nour", "Omar", "Imane", "Yassine", "Meryem",
            "Adam", "Hiba", "Rayan", "Lina", "Zakaria", "Kenza", "Ismail", "Douaa", "Anas", "Fatima"]
 NOMS = ["El Amrani", "Bennani", "Chraibi", "Idrissi", "Tazi", "Berrada", "Fassi", "Alaoui", "Cherkaoui", "Lahlou"]
@@ -109,84 +111,83 @@ def load_candidates(n=24):
         score = random.randint(35, 98)
         rows.append({
             "ID": f"CAND-{1000+i}",
-            "Nom": f"{random.choice(PRENOMS)} {random.choice(NOMS)}",
-            "Poste visé": random.choice(POSTES),
-            "Ville": random.choice(CITIES),
-            "Diplôme": random.choice(DIPLOMES),
-            "Expérience (ans)": random.randint(0, 12),
-            "Score IA": score,
-            "Statut": random.choice(STATUTS) if score < 90 else random.choice(["Présélectionné", "Entretien programmé", "Embauché"]),
+            "Name": f"{random.choice(PRENOMS)} {random.choice(NOMS)}",
+            "Target Position": random.choice(POSTES),
+            "City": random.choice(CITIES),
+            "Degree": random.choice(DIPLOMES),
+            "Experience (yrs)": random.randint(0, 12),
+            "AI Score": score,
+            "Status": random.choice(STATUTS) if score < 90 else random.choice(["Preselected", "Interview Scheduled", "Hired"]),
             "Email": f"{random.choice(PRENOMS).lower()}.{random.choice(NOMS).lower().replace(' ', '')}@email.com",
-            "Source": random.choice(["Gmail", "Outlook", "Site carrière"]),
-            "Date réception": (datetime.now() - timedelta(days=random.randint(0, 45))).strftime("%d/%m/%Y"),
+            "Source": random.choice(["Gmail", "Outlook", "Career Site"]),
+            "Date Received": (datetime.now() - timedelta(days=random.randint(0, 45))).strftime("%d/%m/%Y"),
         })
     return pd.DataFrame(rows)
 
 # ============================================================
-# CV SAMPLES (pour la démo sans upload)
+# CV SAMPLES (for demo without upload)
 # ============================================================
 SAMPLE_JOBS = {
-    "Développeur Full Stack (Casablanca)": """Nous recherchons un Développeur Full Stack (H/F) basé à Casablanca.
-Compétences requises: Python, JavaScript, React, FastAPI, SQL, Git, Docker.
-Expérience: 3 à 6 ans minimum en développement web.
-Diplôme: Bac+5 Ingénieur informatique ou équivalent.
-Anglais professionnel requis. Autonomie, esprit d'équipe, capacité à travailler en environnement agile.""",
-    "Business Developer (Dubai)": """Poste de Business Developer basé à Dubai, UAE.
-Compétences requises: prospection B2B, négociation, CRM (Odoo/Salesforce), anglais courant, arabe un plus.
-Expérience: 2 à 5 ans en développement commercial, idéalement secteur tech ou services.
-Diplôme: Bac+5 École de commerce ou équivalent.
-Permis de conduire souhaité, disponibilité pour déplacements régionaux.""",
+    "Full Stack Developer (Remote)": """We are looking for a Full Stack Developer (M/F).
+Required Skills: Python, JavaScript, React, FastAPI, SQL, Git, Docker.
+Experience: 3 to 6 years minimum in web development.
+Degree: Master's in Computer Science or equivalent.
+Professional English required. Autonomy, teamwork, and ability to work in an agile environment.""",
+    "Business Developer (Dubai)": """Business Developer position based in Dubai, UAE.
+Required Skills: B2B prospecting, negotiation, CRM (Odoo/Salesforce), fluent English, Arabic is a plus.
+Experience: 2 to 5 years in business development, ideally in the tech or services sector.
+Degree: Master's from a Business School or equivalent.
+Driving license preferred, availability for regional travel.""",
 }
 
 SAMPLE_RESUMES = {
-    "Candidat A — Profil Dev fort": """Youssef El Amrani
-Casablanca, Maroc | youssef.elamrani@email.com
-Ingénieur informatique, Bac+5 (ENSIAS)
+    "Candidate A — Strong Dev Profile": """Youssef El Amrani
+Casablanca, Morocco | youssef.elamrani@email.com
+Computer Engineer, MSc (ENSIAS)
 
-Expérience:
-- 4 ans en développement Full Stack (Python, FastAPI, React, PostgreSQL)
-- Mise en place de pipelines CI/CD avec Docker et Git
-- Expérience agile (Scrum), travail en équipe internationale
+Experience:
+- 4 years in Full Stack development (Python, FastAPI, React, PostgreSQL)
+- Implementation of CI/CD pipelines with Docker and Git
+- Agile experience (Scrum), working in an international team
 
-Compétences: Python, JavaScript, React, SQL, Docker, Git, FastAPI, API REST
-Langues: Français (natif), Anglais (professionnel), Arabe (natif)
+Skills: Python, JavaScript, React, SQL, Docker, Git, FastAPI, REST APIs
+Languages: French (Native), English (Professional), Arabic (Native)
 """,
-    "Candidat B — Profil junior": """Sara Bennani
-Rabat, Maroc | sara.bennani@email.com
-Licence Pro Informatique, Bac+3
+    "Candidate B — Junior Profile": """Sara Bennani
+Rabat, Morocco | sara.bennani@email.com
+BSc in Computer Science
 
-Expérience:
-- 1 an de stage en développement web (HTML, CSS, JavaScript)
-- Projet académique de site e-commerce avec PHP
+Experience:
+- 1-year internship in web development (HTML, CSS, JavaScript)
+- Academic e-commerce site project using PHP
 
-Compétences: HTML, CSS, JavaScript, PHP, notions de MySQL
-Langues: Français (natif), Anglais (intermédiaire)
+Skills: HTML, CSS, JavaScript, PHP, MySQL basics
+Languages: French (Native), English (Intermediate)
 """,
-    "Candidat C — Profil Business Dev": """Karim Tazi
+    "Candidate C — Business Dev Profile": """Karim Tazi
 Dubai, UAE | karim.tazi@email.com
-MBA, Bac+5 École de commerce
+MBA, Business School
 
-Expérience:
-- 5 ans en développement commercial B2B secteur tech, marché GCC
-- Gestion CRM (Salesforce), closing de contrats > 100K USD
-- Anglais courant, arabe natif, réseau professionnel Dubai/Abu Dhabi
+Experience:
+- 5 years in B2B business development in the tech sector, GCC market
+- CRM management (Salesforce), closing contracts > 100K USD
+- Fluent English, native Arabic, professional network in Dubai/Abu Dhabi
 
-Compétences: Négociation, prospection B2B, CRM, closing, gestion de comptes clés
-Langues: Arabe (natif), Anglais (courant), Français (professionnel)
+Skills: Negotiation, B2B prospecting, CRM, closing, key account management
+Languages: Arabic (Native), English (Fluent), French (Professional)
 """,
 }
 
-STOPWORDS = set("""le la les un une des du de et à a au aux en pour par sur avec dans ou est sont
-this that the a an and or of to for with in on is are will be we you your our
-h f poste recherche recherchons requises requis minimum idéalement""".split())
+STOPWORDS = set("""the a an and or of to for with in on is are will be we you your our
+poste recherche recherchons requises requis minimum idéalement""".split())
 
 SKILL_BANK = ["python", "javascript", "react", "sql", "docker", "git", "fastapi", "java", "php",
-              "html", "css", "excel", "power bi", "sap", "odoo", "salesforce", "crm", "négociation",
-              "prospection", "marketing", "comptabilité", "finance", "rh", "communication", "anglais",
-              "arabe", "français", "agile", "scrum", "devops", "data", "mysql", "postgresql", "aws"]
+              "html", "css", "excel", "power bi", "sap", "odoo", "salesforce", "crm", "negotiation",
+              "prospecting", "marketing", "accounting", "finance", "hr", "communication", "english",
+              "arabic", "french", "agile", "scrum", "devops", "data", "mysql", "postgresql", "aws"]
 
 # ============================================================
-# LOCAL SCORING ENGINE (fallback sans clé API — 100% gratuit)
+# LOCAL SCORING ENGINE (Fallback - 100% Free)
 # ============================================================
 def extract_years_experience(text):
     matches = re.findall(r"(\d+)\s*(?:ans|an|years?)", text.lower())
@@ -197,7 +198,7 @@ def extract_skills(text):
     return sorted({s for s in SKILL_BANK if s in text_low})
 
 def tokenize(text):
-    words = re.findall(r"[a-zàâäéèêëïîôöùûüç]+", text.lower())
+    words = re.findall(r"[a-z]+", text.lower())
     return [w for w in words if w not in STOPWORDS and len(w) > 2]
 
 def score_resume_local(resume_text, job_desc):
@@ -221,18 +222,18 @@ def score_resume_local(resume_text, job_desc):
     final_score = max(5, min(98, final_score))
 
     if final_score >= 75:
-        verdict = "Fortement recommandé"
+        verdict = "Highly Recommended"
     elif final_score >= 50:
-        verdict = "À considérer"
+        verdict = "Consider"
     else:
-        verdict = "Peu adapté au poste"
+        verdict = "Not a strong match"
 
     why = (
-        f"Le candidat maîtrise {len(matched)} des {len(job_skills) if job_skills else '—'} compétences clés recherchées "
-        f"({', '.join(matched) if matched else 'aucune correspondance directe détectée'}). "
-        f"Expérience détectée: environ {resume_years} an(s), contre {job_years_req} an(s) requis. "
-        + (f"Compétences manquantes à clarifier en entretien: {', '.join(missing)}." if missing else
-           "Aucune compétence clé manquante détectée.")
+        f"The candidate matches {len(matched)} out of {len(job_skills) if job_skills else '—'} key skills searched "
+        f"({', '.join(matched) if matched else 'no direct matches detected'}). "
+        f"Detected experience: approximately {resume_years} year(s), compared to {job_years_req} year(s) required. "
+        + (f"Missing skills to clarify in interview: {', '.join(missing)}." if missing else
+           "No key skills missing.")
     )
 
     return {
@@ -242,19 +243,19 @@ def score_resume_local(resume_text, job_desc):
         "missing_skills": missing,
         "years_detected": resume_years,
         "why": why,
-        "engine": "Moteur local (règles + correspondance mots-clés) — gratuit, sans appel API",
+        "engine": "Local Engine (Rules + Keyword Match) — Free, no API call",
     }
 
 def try_ai_scoring(resume_text, job_desc, provider, api_key):
-    """Tente un scoring via une vraie API LLM si une clé est fournie dans la démo live."""
-    prompt = f"""Tu es un assistant de recrutement expert. Analyse ce CV par rapport à cette offre d'emploi.
-Réponds STRICTEMENT en JSON, sans texte autour, avec les clés:
-score (entier 0-100), verdict (courte phrase), matched_skills (liste), missing_skills (liste), why (2-3 phrases expliquant le score).
+    """Attempt scoring via a real LLM API if a key is provided."""
+    prompt = f"""You are an expert recruitment assistant. Analyze this CV against this job offer.
+Reply STRICTLY in JSON format, without surrounding text, with the keys:
+score (integer 0-100), verdict (short sentence), matched_skills (list), missing_skills (list), why (2-3 sentences explaining the score).
 
-OFFRE D'EMPLOI:
+JOB OFFER:
 {job_desc}
 
-CV DU CANDIDAT:
+CANDIDATE CV:
 {resume_text}
 """
     try:
@@ -262,7 +263,7 @@ CV DU CANDIDAT:
             import anthropic
             client = anthropic.Anthropic(api_key=api_key)
             resp = client.messages.create(
-                model="claude-sonnet-4-6",
+                model="claude-3-5-sonnet-latest",
                 max_tokens=600,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -283,11 +284,11 @@ CV DU CANDIDAT:
 
         cleaned = re.sub(r"^```json|```$", "", raw.strip(), flags=re.MULTILINE).strip()
         data = json.loads(cleaned)
-        data["engine"] = f"IA en direct — {provider}"
+        data["engine"] = f"Live AI — {provider}"
         data["years_detected"] = extract_years_experience(resume_text)
         return data
     except Exception as e:
-        st.warning(f"⚠️ Appel API réel indisponible ({e}). Bascule sur le moteur local de démo.")
+        st.warning(f"⚠️ Real API call unavailable ({e}). Falling back to the local demo engine.")
         return None
 
 def extract_text_from_upload(uploaded_file):
@@ -307,33 +308,37 @@ def extract_text_from_upload(uploaded_file):
 # SIDEBAR NAVIGATION
 # ============================================================
 st.sidebar.markdown("## 🎯 RecruitAI Pro")
-st.sidebar.caption("Démo commerciale — Automatisation screening CV")
+st.sidebar.caption("Sales Demo — Automated CV Screening")
 
 page = st.sidebar.radio(
     "Navigation",
     [
-        "🏠 Aperçu de la solution",
-        "🏗️ Architecture technique",
-        "🧠 Démo — Scoring IA",
-        "🗂️ CVthèque & Dashboard",
-        "📅 Prise de RDV automatique",
-        "💰 Coût & Délais",
+        "🏠 Solution Overview",
+        "🏗️ Technical Architecture",
+        "🧠 AI Scoring Demo",
+        "🗂️ Talent Pool & Dashboard",
+        "📅 Automated Scheduling",
+        "💰 Cost & Timeline",
     ],
 )
 
+# Optional: API Settings for demo purposes
+st.sidebar.markdown("---")
+ai_provider = st.sidebar.selectbox("AI Model (Demo)", ["None (Free Local Engine)", "OpenAI (GPT)", "Claude (Anthropic)", "Gemini (Google)"])
+ai_key = st.sidebar.text_input("API Key (Optional)", type="password")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Proposé par **Anas** · AI Automation Engineer\nContact commercial : anaslachhab666@gmail.com \nWhatsapp : +212654615222")
+st.sidebar.caption("Presented by **Anas** · AI Automation Engineer\nContact: anaslachhab666@gmail.com \nWhatsapp: +212654615222")
 
 # ============================================================
-# PAGE 1 — APERÇU
+# PAGE 1 — OVERVIEW
 # ============================================================
-if page == "🏠 Aperçu de la solution":
+if page == "🏠 Solution Overview":
     st.markdown("""
     <div class="hero">
         <h1>🎯 RecruitAI Pro</h1>
-        <p>Automatisation complète du tri des CV par Intelligence Artificielle — de la réception de l'email
-        jusqu'à la proposition d'entretien, sans intervention manuelle.</p>
+        <p>Complete CV sorting automation using Artificial Intelligence — from email reception 
+        to interview scheduling, without manual intervention.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -341,47 +346,47 @@ if page == "🏠 Aperçu de la solution":
     for col, val, lbl in zip(
         [c1, c2, c3, c4],
         ["-80%", "24/7", "< 30 sec", "100%"],
-        ["Temps de tri manuel", "Traitement automatique", "Par CV analysé", "Traçabilité candidats"]
+        ["Manual Sorting Time", "Automatic Processing", "Per CV Analyzed", "Candidate Traceability"]
     ):
         col.markdown(f'<div class="metric-card"><div class="val">{val}</div><div class="lbl">{lbl}</div></div>', unsafe_allow_html=True)
 
-    st.markdown("### Comment ça fonctionne")
+    st.markdown("### How it works")
     steps = [
-        ("1️⃣ Connexion boîte mail / site carrière", "Connexion à Gmail ou Outlook via API (OAuth), et/ou au site carrière de l'agence via son API si disponible."),
-        ("2️⃣ Extraction automatique", "Chaque nouveau CV reçu (PDF/DOCX) est détecté et son contenu extrait automatiquement."),
-        ("3️⃣ Analyse IA (Claude / GPT / Gemini)", "Le CV est comparé à la fiche de poste : score de pertinence, points forts, points faibles, justification détaillée."),
-        ("4️⃣ Enregistrement en base (CVthèque)", "Informations structurées (diplôme, expérience, localisation, compétences) sauvegardées automatiquement."),
-        ("5️⃣ Dashboard RH en temps réel", "Le recruteur visualise, filtre et trie tous les candidats scorés, sans ouvrir un seul CV manuellement."),
-        ("6️⃣ Prise de RDV automatique", "Si le score dépasse le seuil défini, un lien Calendly est envoyé automatiquement au candidat pour planifier l'entretien."),
+        ("1️⃣ Email / Career Site Connection", "Connects to Gmail or Outlook via API (OAuth), and/or the agency career site via its API."),
+        ("2️⃣ Automatic Extraction", "Every new CV received (PDF/DOCX) is detected and its content is automatically extracted."),
+        ("3️⃣ AI Analysis (Claude / GPT / Gemini)", "The CV is compared to the job description: relevance score, strengths, weaknesses, and detailed justification."),
+        ("4️⃣ Database Recording (Talent Pool)", "Structured information (degree, experience, location, skills) is saved automatically."),
+        ("5️⃣ Real-time HR Dashboard", "Recruiters visualize, filter, and sort all scored candidates without manually opening a single file."),
+        ("6️⃣ Automated Scheduling", "If the score exceeds the defined threshold, a Calendly link is automatically sent to the candidate to plan an interview."),
     ]
     for title, desc in steps:
         st.markdown(f'<div class="step-box"><b>{title}</b><br><span style="color:#b8b8d1">{desc}</span></div>', unsafe_allow_html=True)
 
-    st.markdown("### Pourquoi cette solution ?")
+    st.markdown("### Why this solution?")
     colA, colB = st.columns(2)
     with colA:
         st.markdown("""
         <div class="card">
-        <h3>😩 Sans automatisation</h3>
+        <h3>😩 Without Automation</h3>
         <ul>
-        <li>Un recruteur lit 100+ CV/semaine manuellement</li>
-        <li>Biais humain, fatigue, incohérence de jugement</li>
-        <li>Candidats qualifiés perdus dans la pile</li>
-        <li>Aucune base de données structurée réutilisable</li>
-        <li>Délai de réponse aux candidats de plusieurs jours</li>
+        <li>Recruiter reads 100+ CVs/week manually</li>
+        <li>Human bias, fatigue, inconsistent judgment</li>
+        <li>Qualified candidates lost in the pile</li>
+        <li>No reusable structured database</li>
+        <li>Response time to candidates takes several days</li>
         </ul>
         </div>
         """, unsafe_allow_html=True)
     with colB:
         st.markdown("""
         <div class="card">
-        <h3>🚀 Avec RecruitAI Pro</h3>
+        <h3>🚀 With RecruitAI Pro</h3>
         <ul>
-        <li>Tri de centaines de CV en quelques minutes</li>
-        <li>Score objectif, cohérent, justifié par l'IA</li>
-        <li>CVthèque exploitable pour de futurs postes</li>
-        <li>Entretien proposé automatiquement aux meilleurs profils</li>
-        <li>Le recruteur se concentre sur l'entretien, pas le tri</li>
+        <li>Sorting hundreds of CVs in minutes</li>
+        <li>Objective, consistent score justified by AI</li>
+        <li>Talent pool exploitable for future roles</li>
+        <li>Interviews proposed automatically to top profiles</li>
+        <li>Recruiters focus on interviews, not sorting</li>
         </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -389,9 +394,9 @@ if page == "🏠 Aperçu de la solution":
 # ============================================================
 # PAGE 2 — ARCHITECTURE
 # ============================================================
-elif page == "🏗️ Architecture technique":
-    st.markdown("## 🏗️ Architecture technique")
-    st.caption("Vue d'ensemble du pipeline d'automatisation — de la réception du CV à la prise de RDV.")
+elif page == "🏗️ Technical Architecture":
+    st.markdown("## 🏗️ Technical Architecture")
+    st.caption("Overview of the automation pipeline — from CV reception to scheduling.")
 
     dot = """
     digraph G {
@@ -401,14 +406,14 @@ elif page == "🏗️ Architecture technique":
         edge [color="#8e44ad" fontcolor="#b8b8d1" fontname="Helvetica" fontsize=9];
 
         Gmail [label="📧 Gmail / Outlook API\\n(OAuth)" fillcolor="#2d1b4e"];
-        Site [label="🌐 Site carrière\\n(API si dispo)" fillcolor="#2d1b4e"];
-        Parse [label="📄 Extraction texte\\nPDF / DOCX" fillcolor="#1b3a4e"];
-        LLM [label="🧠 Moteur IA\\nClaude / GPT / Gemini" fillcolor="#4e1b3a"];
+        Site [label="🌐 Career Site\\n(API if available)" fillcolor="#2d1b4e"];
+        Parse [label="📄 Text Extraction\\nPDF / DOCX" fillcolor="#1b3a4e"];
+        LLM [label="🧠 AI Engine\\nClaude / GPT / Gemini" fillcolor="#4e1b3a"];
         Score [label="📊 Scoring + Justification\\n(0-100)" fillcolor="#4e1b3a"];
-        DB [label="🗄️ Base de données\\nCVthèque structurée" fillcolor="#1b4e2d"];
-        Dash [label="📈 Dashboard RH\\n(temps réel)" fillcolor="#1b4e2d"];
-        Calendly [label="📅 Calendly\\nRDV auto si score OK" fillcolor="#4e3a1b"];
-        Reject [label="✉️ Email réponse\\nautomatique si score faible" fillcolor="#4e3a1b"];
+        DB [label="🗄️ Database\\nStructured Talent Pool" fillcolor="#1b4e2d"];
+        Dash [label="📈 HR Dashboard\\n(Real-time)" fillcolor="#1b4e2d"];
+        Calendly [label="📅 Calendly\\nAuto-Invite if Score OK" fillcolor="#4e3a1b"];
+        Reject [label="✉️ Auto Response\\nIf score is low" fillcolor="#4e3a1b"];
 
         Gmail -> Parse;
         Site -> Parse;
@@ -416,84 +421,84 @@ elif page == "🏗️ Architecture technique":
         LLM -> Score;
         Score -> DB;
         DB -> Dash;
-        Score -> Calendly [label="score ≥ seuil"];
-        Score -> Reject [label="score < seuil"];
-        Dash -> Calendly [label="validation manuelle RH" style=dashed];
+        Score -> Calendly [label="score ≥ threshold"];
+        Score -> Reject [label="score < threshold"];
+        Dash -> Calendly [label="manual HR validation" style=dashed];
     }
     """
     st.graphviz_chart(dot, use_container_width=True)
 
-    st.markdown("### Détail des composants")
-    tabs = st.tabs(["🔌 Connexion emails", "🧠 Moteur IA", "🗄️ Base de données", "📈 Dashboard", "📅 Scheduling"])
+    st.markdown("### Component Details")
+    tabs = st.tabs(["🔌 Email Connection", "🧠 AI Engine", "🗄️ Database", "📈 Dashboard", "📅 Scheduling"])
 
     with tabs[0]:
         st.markdown("""
-        - **Gmail API** ou **Microsoft Graph API (Outlook)** connectés en OAuth2 (accès en lecture seule sur la boîte de réception candidatures)
-        - Détection automatique des nouveaux emails contenant une pièce jointe CV (filtre par mot-clé objet / dossier dédié)
-        - Optionnel : webhook depuis le site carrière si celui-ci expose une API (ex: formulaire de candidature → webhook n8n)
+        - **Gmail API** or **Microsoft Graph API (Outlook)** connected via OAuth2 (read-only access to incoming applications).
+        - Automatic detection of new emails containing CV attachments (filtered by subject keywords or dedicated folders).
+        - Optional: Webhook from the career site (e.g., application form → n8n webhook).
         """)
     with tabs[1]:
         st.markdown("""
-        - Choix du fournisseur selon le budget client : **Claude (Anthropic)**, **GPT (OpenAI)** ou **Gemini (Google)**
-        - Prompt structuré : CV + fiche de poste → JSON (score, points forts, points faibles, justification)
-        - Architecture orchestrée avec **n8n** (workflow no-code/low-code) + scripts **Python (FastAPI)** pour la logique métier
+        - Choice of provider based on budget: **Claude (Anthropic)**, **GPT (OpenAI)**, or **Gemini (Google)**.
+        - Structured Prompt: CV + Job Desc → JSON (score, strengths, weaknesses, justification).
+        - Orchestrated architecture with **n8n** (no-code/low-code workflow) + **Python (FastAPI)** for business logic.
         """)
     with tabs[2]:
         st.markdown("""
-        - Base de données structurée (PostgreSQL / Airtable / Google Sheets selon budget)
-        - Champs extraits automatiquement : nom, ville, diplôme, années d'expérience, compétences, score, statut
-        - Sert de **CVthèque réutilisable** pour de futurs postes similaires (recherche par filtres)
+        - Structured Database (PostgreSQL / Airtable / Google Sheets depending on needs).
+        - Automatically extracted fields: name, city, degree, years of experience, skills, score, status.
+        - Serves as a **reusable Talent Pool** for future similar positions (search by filters).
         """)
     with tabs[3]:
         st.markdown("""
-        - Dashboard type **Streamlit / Power BI / Looker Studio** connecté en direct à la base de données
-        - Filtres par poste, ville, score, statut — vue "pipeline" pour suivi RH
-        - Accès web sécurisé, utilisable par toute l'équipe recrutement
+        - Dashboard using **Streamlit / Power BI / Looker Studio** connected directly to the database.
+        - Filters by position, city, score, status — pipeline view for HR tracking.
+        - Secure web access, usable by the entire recruitment team.
         """)
     with tabs[4]:
         st.markdown("""
-        - Intégration **Calendly API** : lien d'entretien envoyé automatiquement par email si score ≥ seuil défini par l'agence
-        - Email de réponse automatique (personnalisé) envoyé aux candidats non retenus
-        - Le recruteur garde la main : validation manuelle possible avant envoi si souhaité
+        - **Calendly API** integration: Interview link sent automatically via email if score ≥ threshold defined by the agency.
+        - Personalized automatic response email sent to candidates not retained.
+        - Recruiter maintains control: manual validation possible before sending if preferred.
         """)
 
 # ============================================================
 # PAGE 3 — DEMO SCORING
 # ============================================================
-elif page == "🧠 Démo — Scoring IA":
-    st.markdown("## 🧠 Démo interactive — Scoring IA d'un CV")
-    st.caption("Cette page simule ce que verrait le système en temps réel après réception d'un CV par email.")
+elif page == "🧠 AI Scoring Demo":
+    st.markdown("## 🧠 Interactive Demo — AI CV Scoring")
+    st.caption("This page simulates what the system would see in real-time after receiving a CV via email.")
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("#### 📋 Fiche de poste")
-        job_choice = st.selectbox("Choisir un exemple de poste", list(SAMPLE_JOBS.keys()) + ["✏️ Coller ma propre fiche de poste"])
-        if job_choice == "✏️ Coller ma propre fiche de poste":
-            job_desc = st.text_area("Fiche de poste", height=220, placeholder="Colle ici la description du poste...")
+        st.markdown("#### 📋 Job Description")
+        job_choice = st.selectbox("Choose a sample job", list(SAMPLE_JOBS.keys()) + ["✏️ Paste my own job description"])
+        if job_choice == "✏️ Paste my own job description":
+            job_desc = st.text_area("Job Description", height=220, placeholder="Paste job description here...")
         else:
-            job_desc = st.text_area("Fiche de poste", value=SAMPLE_JOBS[job_choice], height=220)
+            job_desc = st.text_area("Job Description", value=SAMPLE_JOBS[job_choice], height=220)
 
     with col2:
-        st.markdown("#### 📄 CV du candidat")
-        source = st.radio("Source du CV", ["Utiliser un exemple", "Uploader un fichier (PDF/DOCX/TXT)"], horizontal=True)
-        if source == "Utiliser un exemple":
-            cand_choice = st.selectbox("Choisir un exemple de candidat", list(SAMPLE_RESUMES.keys()))
-            resume_text = st.text_area("Contenu du CV", value=SAMPLE_RESUMES[cand_choice], height=220)
+        st.markdown("#### 📄 Candidate CV")
+        source = st.radio("CV Source", ["Use a sample", "Upload file (PDF/DOCX/TXT)"], horizontal=True)
+        if source == "Use a sample":
+            cand_choice = st.selectbox("Choose a sample candidate", list(SAMPLE_RESUMES.keys()))
+            resume_text = st.text_area("CV Content", value=SAMPLE_RESUMES[cand_choice], height=220)
         else:
-            uploaded = st.file_uploader("Charger un CV", type=["pdf", "docx", "txt"])
+            uploaded = st.file_uploader("Load a CV", type=["pdf", "docx", "txt"])
             resume_text = extract_text_from_upload(uploaded) if uploaded else ""
             if resume_text:
-                st.text_area("Texte extrait", value=resume_text, height=220)
+                st.text_area("Extracted Text", value=resume_text, height=220)
 
-    threshold = st.slider("🎯 Seuil de recommandation automatique (score minimum pour proposer un entretien)", 0, 100, 70)
+    threshold = st.slider("🎯 Auto-recommendation Threshold (min score to propose interview)", 0, 100, 70)
 
-    if st.button("🚀 Lancer l'analyse IA", type="primary", use_container_width=True):
+    if st.button("🚀 Launch AI Analysis", type="primary", use_container_width=True):
         if not job_desc or not resume_text:
-            st.error("Merci de fournir une fiche de poste et un CV.")
+            st.error("Please provide both a job description and a CV.")
         else:
-            with st.spinner("Analyse en cours..."):
+            with st.spinner("Analyzing..."):
                 result = None
-                if ai_provider != "Aucun (moteur local gratuit)" and ai_key:
+                if ai_provider != "None (Free Local Engine)" and ai_key:
                     result = try_ai_scoring(resume_text, job_desc, ai_provider, ai_key)
                 if result is None:
                     result = score_resume_local(resume_text, job_desc)
@@ -504,7 +509,7 @@ elif page == "🧠 Démo — Scoring IA":
                 fig = go.Figure(go.Indicator(
                     mode="gauge+number",
                     value=result["score"],
-                    title={"text": "Score de pertinence"},
+                    title={"text": "Relevance Score"},
                     gauge={
                         "axis": {"range": [0, 100]},
                         "bar": {"color": "#8e44ad"},
@@ -524,61 +529,61 @@ elif page == "🧠 Démo — Scoring IA":
                 st.caption(f"🔧 {result['engine']}")
 
             with r2:
-                st.markdown("#### 💬 Justification IA")
+                st.markdown("#### 💬 AI Justification")
                 st.info(result["why"])
                 cc1, cc2 = st.columns(2)
                 with cc1:
-                    st.markdown("**✅ Compétences en correspondance**")
+                    st.markdown("**✅ Matching Skills**")
                     if result.get("matched_skills"):
                         for s in result["matched_skills"]:
                             st.markdown(f"- {s}")
                     else:
-                        st.caption("Aucune détectée")
+                        st.caption("None detected")
                 with cc2:
-                    st.markdown("**⚠️ Compétences manquantes**")
+                    st.markdown("**⚠️ Missing Skills**")
                     if result.get("missing_skills"):
                         for s in result["missing_skills"]:
                             st.markdown(f"- {s}")
                     else:
-                        st.caption("Aucune")
+                        st.caption("None")
 
-                st.markdown("#### 📌 Action automatique déclenchée")
+                st.markdown("#### 📌 Automatic Action Triggered")
                 if result["score"] >= threshold:
-                    st.success("✅ Score au-dessus du seuil → **lien Calendly envoyé automatiquement** au candidat + notification RH.")
+                    st.success(f"✅ Score above threshold → **Calendly link automatically sent** to candidate + HR notification.")
                 else:
-                    st.warning("❌ Score sous le seuil → candidat **archivé dans la CVthèque** + email de réponse automatique envoyé.")
+                    st.warning(f"❌ Score below threshold → candidate **archived in Talent Pool** + auto-rejection email sent.")
 
 # ============================================================
-# PAGE 4 — CVTHEQUE
+# PAGE 4 — TALENT POOL
 # ============================================================
-elif page == "🗂️ CVthèque & Dashboard":
-    st.markdown("## 🗂️ CVthèque & Dashboard RH")
-    st.caption("Base de données structurée — alimentée automatiquement par l'analyse IA de chaque nouveau CV.")
+elif page == "🗂️ Talent Pool & Dashboard":
+    st.markdown("## 🗂️ Talent Pool & HR Dashboard")
+    st.caption("Structured database — automatically updated by AI analysis of every new CV.")
 
     df = load_candidates()
 
     k1, k2, k3, k4, k5 = st.columns(5)
-    k1.markdown(f'<div class="metric-card"><div class="val">{len(df)}</div><div class="lbl">Candidats total</div></div>', unsafe_allow_html=True)
-    k2.markdown(f'<div class="metric-card"><div class="val">{(df["Score IA"]>=75).sum()}</div><div class="lbl">Score ≥ 75</div></div>', unsafe_allow_html=True)
-    k3.markdown(f'<div class="metric-card"><div class="val">{(df["Statut"]=="Entretien programmé").sum()}</div><div class="lbl">Entretiens programmés</div></div>', unsafe_allow_html=True)
-    k4.markdown(f'<div class="metric-card"><div class="val">{(df["Statut"]=="Embauché").sum()}</div><div class="lbl">Embauchés</div></div>', unsafe_allow_html=True)
-    k5.markdown(f'<div class="metric-card"><div class="val">{round(df["Score IA"].mean())}</div><div class="lbl">Score moyen</div></div>', unsafe_allow_html=True)
+    k1.markdown(f'<div class="metric-card"><div class="val">{len(df)}</div><div class="lbl">Total Candidates</div></div>', unsafe_allow_html=True)
+    k2.markdown(f'<div class="metric-card"><div class="val">{(df["AI Score"]>=75).sum()}</div><div class="lbl">Score ≥ 75</div></div>', unsafe_allow_html=True)
+    k3.markdown(f'<div class="metric-card"><div class="val">{(df["Status"]=="Interview Scheduled").sum()}</div><div class="lbl">Interviews Set</div></div>', unsafe_allow_html=True)
+    k4.markdown(f'<div class="metric-card"><div class="val">{(df["Status"]=="Hired").sum()}</div><div class="lbl">Hired</div></div>', unsafe_allow_html=True)
+    k5.markdown(f'<div class="metric-card"><div class="val">{round(df["AI Score"].mean())}</div><div class="lbl">Avg Score</div></div>', unsafe_allow_html=True)
 
     st.markdown("")
     f1, f2, f3, f4 = st.columns(4)
-    poste_f = f1.multiselect("Poste", sorted(df["Poste visé"].unique()))
-    ville_f = f2.multiselect("Ville", sorted(df["Ville"].unique()))
-    statut_f = f3.multiselect("Statut", sorted(df["Statut"].unique()))
-    score_f = f4.slider("Score minimum", 0, 100, 0)
+    poste_f = f1.multiselect("Position", sorted(df["Target Position"].unique()))
+    ville_f = f2.multiselect("City", sorted(df["City"].unique()))
+    statut_f = f3.multiselect("Status", sorted(df["Status"].unique()))
+    score_f = f4.slider("Minimum Score", 0, 100, 0)
 
     filtered = df.copy()
-    if poste_f: filtered = filtered[filtered["Poste visé"].isin(poste_f)]
-    if ville_f: filtered = filtered[filtered["Ville"].isin(ville_f)]
-    if statut_f: filtered = filtered[filtered["Statut"].isin(statut_f)]
-    filtered = filtered[filtered["Score IA"] >= score_f]
-    filtered = filtered.sort_values("Score IA", ascending=False)
+    if poste_f: filtered = filtered[filtered["Target Position"].isin(poste_f)]
+    if ville_f: filtered = filtered[filtered["City"].isin(ville_f)]
+    if statut_f: filtered = filtered[filtered["Status"].isin(statut_f)]
+    filtered = filtered[filtered["AI Score"] >= score_f]
+    filtered = filtered.sort_values("AI Score", ascending=False)
 
-    tab1, tab2 = st.tabs(["📋 Table des candidats", "📊 Vue analytique"])
+    tab1, tab2 = st.tabs(["📋 Candidate Table", "📊 Analytics View"])
 
     with tab1:
         st.dataframe(
@@ -586,53 +591,53 @@ elif page == "🗂️ CVthèque & Dashboard":
             use_container_width=True,
             hide_index=True,
             column_config={
-                "Score IA": st.column_config.ProgressColumn("Score IA", min_value=0, max_value=100, format="%d"),
+                "AI Score": st.column_config.ProgressColumn("AI Score", min_value=0, max_value=100, format="%d"),
             },
         )
-        st.caption(f"{len(filtered)} candidat(s) affiché(s) sur {len(df)}")
+        st.caption(f"Showing {len(filtered)} candidate(s) out of {len(df)}")
 
-        st.markdown("#### 🔍 Fiche candidat détaillée")
-        pick = st.selectbox("Sélectionner un candidat", filtered["Nom"] + " — " + filtered["ID"])
+        st.markdown("#### 🔍 Detailed Candidate View")
+        pick = st.selectbox("Select a candidate", filtered["Name"] + " — " + filtered["ID"])
         if pick:
             cid = pick.split("—")[-1].strip()
             cand = df[df["ID"] == cid].iloc[0]
             cc1, cc2, cc3 = st.columns([2, 2, 1])
             with cc1:
-                st.markdown(f"**{cand['Nom']}**")
-                st.caption(f"📍 {cand['Ville']} · 🎓 {cand['Diplôme']} · 💼 {cand['Expérience (ans)']} ans d'expérience")
-                st.caption(f"📧 {cand['Email']} · 📨 Reçu via {cand['Source']} le {cand['Date réception']}")
+                st.markdown(f"**{cand['Name']}**")
+                st.caption(f"📍 {cand['City']} · 🎓 {cand['Degree']} · 💼 {cand['Experience (yrs)']} years exp.")
+                st.caption(f"📧 {cand['Email']} · 📨 Received via {cand['Source']} on {cand['Date Received']}")
             with cc2:
-                pill_class = "pill-green" if cand["Score IA"] >= 75 else "pill-orange" if cand["Score IA"] >= 50 else "pill-red"
-                st.markdown(f'Score IA: <span class="pill {pill_class}">{cand["Score IA"]}/100</span>', unsafe_allow_html=True)
-                st.markdown(f'Statut: <span class="pill pill-blue">{cand["Statut"]}</span>', unsafe_allow_html=True)
+                pill_class = "pill-green" if cand["AI Score"] >= 75 else "pill-orange" if cand["AI Score"] >= 50 else "pill-red"
+                st.markdown(f'AI Score: <span class="pill {pill_class}">{cand["AI Score"]}/100</span>', unsafe_allow_html=True)
+                st.markdown(f'Status: <span class="pill pill-blue">{cand["Status"]}</span>', unsafe_allow_html=True)
             with cc3:
-                if st.button("📅 Envoyer lien Calendly", key=f"cal_{cid}"):
-                    st.success(f"Email envoyé à {cand['Email']} avec le lien de prise de RDV ✅")
+                if st.button("📅 Send Calendly Link", key=f"cal_{cid}"):
+                    st.success(f"Email sent to {cand['Email']} with booking link ✅")
 
     with tab2:
         g1, g2 = st.columns(2)
         with g1:
-            fig1 = px.pie(df, names="Statut", title="Répartition par statut", hole=0.5,
+            fig1 = px.pie(df, names="Status", title="Breakdown by Status", hole=0.5,
                           color_discrete_sequence=px.colors.sequential.Purp)
             fig1.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
             st.plotly_chart(fig1, use_container_width=True)
         with g2:
-            fig2 = px.histogram(df, x="Score IA", nbins=15, title="Distribution des scores IA",
+            fig2 = px.histogram(df, x="AI Score", nbins=15, title="AI Score Distribution",
                                 color_discrete_sequence=["#8e44ad"])
             fig2.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
             st.plotly_chart(fig2, use_container_width=True)
 
         g3, g4 = st.columns(2)
         with g3:
-            by_poste = df.groupby("Poste visé")["Score IA"].mean().reset_index().sort_values("Score IA")
-            fig3 = px.bar(by_poste, x="Score IA", y="Poste visé", orientation="h", title="Score moyen par poste",
+            by_poste = df.groupby("Target Position")["AI Score"].mean().reset_index().sort_values("AI Score")
+            fig3 = px.bar(by_poste, x="AI Score", y="Target Position", orientation="h", title="Average Score by Position",
                          color_discrete_sequence=["#3498db"])
             fig3.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
             st.plotly_chart(fig3, use_container_width=True)
         with g4:
-            by_ville = df["Ville"].value_counts().reset_index()
-            by_ville.columns = ["Ville", "Nombre"]
-            fig4 = px.bar(by_ville, x="Ville", y="Nombre", title="Candidats par ville",
+            by_ville = df["City"].value_counts().reset_index()
+            by_ville.columns = ["City", "Count"]
+            fig4 = px.bar(by_ville, x="City", y="Count", title="Candidates by City",
                          color_discrete_sequence=["#2ecc71"])
             fig4.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
             st.plotly_chart(fig4, use_container_width=True)
@@ -640,83 +645,83 @@ elif page == "🗂️ CVthèque & Dashboard":
 # ============================================================
 # PAGE 5 — SCHEDULING
 # ============================================================
-elif page == "📅 Prise de RDV automatique":
-    st.markdown("## 📅 Prise de rendez-vous automatique")
-    st.caption("Dès qu'un candidat dépasse le seuil de score défini, le système propose automatiquement un créneau d'entretien.")
+elif page == "📅 Automated Scheduling":
+    st.markdown("## 📅 Automated Interview Scheduling")
+    st.caption("As soon as a candidate exceeds the score threshold, the system automatically suggests an interview slot.")
 
     df = load_candidates()
-    qualified = df[df["Score IA"] >= 75].sort_values("Score IA", ascending=False)
+    qualified = df[df["AI Score"] >= 75].sort_values("AI Score", ascending=False)
 
-    st.markdown(f"### 🎯 {len(qualified)} candidats qualifiés pour entretien (score ≥ 75)")
+    st.markdown(f"### 🎯 {len(qualified)} Qualified Candidates (Score ≥ 75)")
 
-    calendly_link = st.text_input("Lien Calendly de l'agence (à configurer une seule fois)", value="https://calendly.com/votre-agence/entretien-30min")
+    calendly_link = st.text_input("Agency Calendly Link (Configure once)", value="https://calendly.com/your-agency/30min-interview")
 
     for _, cand in qualified.head(8).iterrows():
         with st.container():
             c1, c2, c3 = st.columns([3, 1, 1])
-            c1.markdown(f"**{cand['Nom']}** — {cand['Poste visé']} · {cand['Ville']}")
-            c2.markdown(f'<span class="pill pill-green">{cand["Score IA"]}/100</span>', unsafe_allow_html=True)
+            c1.markdown(f"**{cand['Name']}** — {cand['Target Position']} · {cand['City']}")
+            c2.markdown(f'<span class="pill pill-green">{cand["AI Score"]}/100</span>', unsafe_allow_html=True)
             with c3:
-                if st.button("Envoyer invitation", key=f"invite_{cand['ID']}"):
-                    st.toast(f"📧 Email envoyé à {cand['Nom']} avec {calendly_link}")
+                if st.button("Send Invitation", key=f"invite_{cand['ID']}"):
+                    st.toast(f"📧 Email sent to {cand['Name']} with {calendly_link}")
             st.markdown("<hr style='margin:0.3rem 0; opacity:0.15'>", unsafe_allow_html=True)
 
-    st.markdown("### ✉️ Aperçu de l'email automatique envoyé au candidat")
+    st.markdown("### ✉️ Auto-Email Preview Sent to Candidate")
     st.markdown("""
     <div class="card">
-    <b>Objet : Votre candidature a retenu notre attention 🎉</b><br><br>
-    Bonjour [Prénom],<br><br>
-    Nous avons bien reçu votre CV pour le poste de [Poste]. Après analyse de votre profil,
-    nous souhaitons échanger avec vous lors d'un court entretien.<br><br>
-    👉 Merci de choisir un créneau qui vous convient via ce lien : <i>[lien Calendly]</i><br><br>
-    À très bientôt,<br>
-    L'équipe recrutement
+    <b>Subject: Your application caught our attention! 🎉</b><br><br>
+    Hello [First Name],<br><br>
+    We have received your CV for the [Position] role. After analyzing your profile, 
+    we would like to discuss your experience in a short interview.<br><br>
+    👉 Please choose a time slot that works for you via this link: <i>[Calendly Link]</i><br><br>
+    Talk soon,<br>
+    The Recruitment Team
     </div>
     """, unsafe_allow_html=True)
 
 # ============================================================
 # PAGE 6 — PRICING & TIMELINE
 # ============================================================
-elif page == "💰 Coût & Délais":
-    st.markdown("## 💰 Coût de mise en place & délais de livraison")
+elif page == "💰 Cost & Timeline":
+    st.markdown("## 💰 Implementation Cost & Delivery Timeline")
 
-    st.markdown("### 📦 Formules")
+    st.markdown("### 📦 Packages")
     p1, p2, p3 = st.columns(3)
     plans = [
-        ("Starter", "500 $", "Connexion Gmail OU Outlook, scoring IA, CVthèque simple (Google Sheets/Airtable), dashboard Streamlit basique.", "2 semaines"),
-        ("Pro", "1000 $", "Gmail + Outlook + site carrière, base de données PostgreSQL, dashboard avancé, intégration Calendly automatique, emails de réponse auto.", "3 à 4 semaines"),
-        ("Enterprise", "Sur devis", "Multi-agences, multi-postes, intégration ATS/CRM existant (Odoo, etc.), tableaux de bord personnalisés, support prioritaire.", "5 à 8 semaines"),
+        ("Starter", "$500", "Gmail OR Outlook connection, AI scoring, simple talent pool (Google Sheets/Airtable), basic Streamlit dashboard.", "2 weeks"),
+        ("Pro", "$1,000", "Gmail + Outlook + career site, PostgreSQL database, advanced dashboard, auto-Calendly integration, auto-response emails.", "3 to 4 weeks"),
+        ("Enterprise", "On Quote", "Multi-agency, multi-position, existing ATS/CRM integration (Odoo, etc.), custom dashboards, priority support.", "5 to 8 weeks"),
     ]
     for col, (name, price, desc, delay) in zip([p1, p2, p3], plans):
         col.markdown(f"""
         <div class="card">
         <h3>{name}</h3>
         <div style="font-size:1.6rem; font-weight:700; color:#8e44ad;">{price}</div>
-        <p style="color:#9a9ab0; font-size:0.85rem;">Setup unique</p>
+        <p style="color:#9a9ab0; font-size:0.85rem;">One-time Setup</p>
         <p>{desc}</p>
         <span class="pill pill-blue">⏱ {delay}</span>
         </div>
         """, unsafe_allow_html=True)
 
-    st.caption("💡 Tarifs indicatifs à ajuster selon le marché cible (Maroc / Dubai) et la complexité réelle du besoin client.")
+    st.caption("💡 Indicative rates to be adjusted based on the target market and actual client complexity.")
 
-    st.markdown("### 📅 Timeline de déploiement type (formule Pro)")
+    st.markdown("### 📅 Deployment Timeline (Pro Package)")
     today = datetime.now()
     phases = [
-        ("Cadrage & accès API", today, today + timedelta(days=3)),
-        ("Connexion Gmail/Outlook + extraction CV", today + timedelta(days=3), today + timedelta(days=8)),
-        ("Intégration moteur IA + prompt scoring", today + timedelta(days=8), today + timedelta(days=14)),
-        ("Base de données + CVthèque", today + timedelta(days=14), today + timedelta(days=18)),
-        ("Dashboard RH", today + timedelta(days=18), today + timedelta(days=23)),
-        ("Intégration Calendly + emails auto", today + timedelta(days=23), today + timedelta(days=26)),
-        ("Tests, recette client, mise en prod", today + timedelta(days=26), today + timedelta(days=30)),
+        ("Scoping & API Access", today, today + timedelta(days=3)),
+        ("Gmail/Outlook Connection + CV Extraction", today + timedelta(days=3), today + timedelta(days=8)),
+        ("AI Engine Integration + Scoring Prompts", today + timedelta(days=8), today + timedelta(days=14)),
+        ("Database & Talent Pool Setup", today + timedelta(days=14), today + timedelta(days=18)),
+        ("HR Dashboard Development", today + timedelta(days=18), today + timedelta(days=23)),
+        ("Calendly & Auto-Email Integration", today + timedelta(days=23), today + timedelta(days=26)),
+        ("Testing & Production Launch", today + timedelta(days=26), today + timedelta(days=30)),
     ]
-    gantt_df = pd.DataFrame(phases, columns=["Phase", "Début", "Fin"])
-    fig = px.timeline(gantt_df, x_start="Début", x_end="Fin", y="Phase", color="Phase",
+    gantt_df = pd.DataFrame(phases, columns=["Phase", "Start", "End"])
+    fig = px.timeline(gantt_df, x_start="Start", x_end="End", y="Phase", color="Phase",
                       color_discrete_sequence=px.colors.qualitative.Bold)
     fig.update_yaxes(autorange="reversed")
     fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="white",
                       showlegend=False, height=380)
     st.plotly_chart(fig, use_container_width=True)
 
-st.markdown('<div class="footer-note">RecruitAI Pro — Démo commerciale générée avec Streamlit · Non connecté à des données réelles</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer-note">RecruitAI Pro — Sales demo generated with Streamlit · Not connected to real live data</div>', unsafe_allow_html=True)
