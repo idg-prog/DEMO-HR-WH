@@ -308,9 +308,8 @@ page = st.sidebar.radio(
     [
         "🏠 Solution Overview",
         "🏗️ Technical Architecture",
-        "🧠 AI Scoring Demo",
         "🗂️ Talent Pool & Dashboard",
-        "📅 Automated Scheduling",
+        "🧠 AI Scoring Demo",
         "💰 Cost & Timeline",
     ],
 )
@@ -342,12 +341,12 @@ if page == "🏠 Solution Overview":
 
     st.markdown("### How it works")
     steps = [
-        ("1️⃣ Email / Career Site Connection", "Connects to Gmail or Outlook via API (OAuth), and/or the agency career site via its API."),
+        ("1️⃣ Email / Career Site Connection", "Connects to Gmail or Outlook via API (OAuth) and the agency career site via its API."),
         ("2️⃣ Automatic Extraction", "Every new CV received (PDF/DOCX) is detected and its content is automatically extracted."),
         ("3️⃣ AI Analysis (Claude / GPT / Gemini)", "The CV is compared to the job description: relevance score, strengths, weaknesses, and detailed justification."),
         ("4️⃣ Database Recording (Talent Pool)", "Structured information (degree, experience, location, skills) is saved automatically."),
         ("5️⃣ Real-time HR Dashboard", "Recruiters visualize, filter, and sort all scored candidates without manually opening a single file."),
-        ("6️⃣ Automated Scheduling", "If the score exceeds the defined threshold, a Calendly link is automatically sent to the candidate to plan an interview."),
+        ("6️⃣ Automated Scheduling", "If the score exceeds the defined threshold, a Calendly link is automatically sent to the candidate for an interview."),
     ]
     for title, desc in steps:
         st.markdown(f'<div class="step-box"><b>{title}</b><br><span style="color:#b8b8d1">{desc}</span></div>', unsafe_allow_html=True)
@@ -375,7 +374,7 @@ if page == "🏠 Solution Overview":
         <li>Sorting hundreds of CVs in minutes</li>
         <li>Objective, consistent score justified by AI</li>
         <li>Talent pool exploitable for future roles</li>
-        <li>Interviews proposed automatically to top profiles</li>
+        <li>Interviews proposed automatically</li>
         <li>Recruiters focus on interviews, not sorting</li>
         </ul>
         </div>
@@ -441,7 +440,7 @@ elif page == "🏗️ Technical Architecture":
         """)
     with tabs[3]:
         st.markdown("""
-        - Dashboard using **Streamlit / Power BI / Looker Studio** connected directly to the database.
+        - Dashboard using **Streamlit / Power BI** connected directly to the database.
         - Filters by position, city, score, status  pipeline view for HR tracking.
         - Secure web access, usable by the entire recruitment team.
         """)
@@ -552,12 +551,11 @@ elif page == "🗂️ Talent Pool & Dashboard":
 
     df = load_candidates()
 
-    k1, k2, k3, k4, k5 = st.columns(5)
+    k1, k2, k3, k4 = st.columns(4)
     k1.markdown(f'<div class="metric-card"><div class="val">{len(df)}</div><div class="lbl">Total Candidates</div></div>', unsafe_allow_html=True)
     k2.markdown(f'<div class="metric-card"><div class="val">{(df["AI Score"]>=75).sum()}</div><div class="lbl">Score ≥ 75</div></div>', unsafe_allow_html=True)
     k3.markdown(f'<div class="metric-card"><div class="val">{(df["Status"]=="Interview Scheduled").sum()}</div><div class="lbl">Interviews Set</div></div>', unsafe_allow_html=True)
-    k4.markdown(f'<div class="metric-card"><div class="val">{(df["Status"]=="Hired").sum()}</div><div class="lbl">Hired</div></div>', unsafe_allow_html=True)
-    k5.markdown(f'<div class="metric-card"><div class="val">{round(df["AI Score"].mean())}</div><div class="lbl">Avg Score</div></div>', unsafe_allow_html=True)
+    k4.markdown(f'<div class="metric-card"><div class="val">{round(df["AI Score"].mean())}</div><div class="lbl">Avg Score</div></div>', unsafe_allow_html=True)
 
     st.markdown("")
     f1, f2, f3, f4 = st.columns(4)
@@ -573,101 +571,11 @@ elif page == "🗂️ Talent Pool & Dashboard":
     filtered = filtered[filtered["AI Score"] >= score_f]
     filtered = filtered.sort_values("AI Score", ascending=False)
 
-    tab1, tab2 = st.tabs(["📋 Candidate Table", "📊 Analytics View"])
-
-    with tab1:
-        st.dataframe(
-            filtered,
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "AI Score": st.column_config.ProgressColumn("AI Score", min_value=0, max_value=100, format="%d"),
-            },
-        )
-        st.caption(f"Showing {len(filtered)} candidate(s) out of {len(df)}")
-
-        st.markdown("#### 🔍 Detailed Candidate View")
-        pick = st.selectbox("Select a candidate", filtered["Name"] + "  " + filtered["ID"])
-        if pick:
-            cid = pick.split("")[-1].strip()
-            cand = df[df["ID"] == cid].iloc[0]
-            cc1, cc2, cc3 = st.columns([2, 2, 1])
-            with cc1:
-                st.markdown(f"**{cand['Name']}**")
-                st.caption(f"📍 {cand['City']} · 🎓 {cand['Degree']} · 💼 {cand['Experience (yrs)']} years exp.")
-                st.caption(f"📧 {cand['Email']} · 📨 Received via {cand['Source']} on {cand['Date Received']}")
-            with cc2:
-                pill_class = "pill-green" if cand["AI Score"] >= 75 else "pill-orange" if cand["AI Score"] >= 50 else "pill-red"
-                st.markdown(f'AI Score: <span class="pill {pill_class}">{cand["AI Score"]}/100</span>', unsafe_allow_html=True)
-                st.markdown(f'Status: <span class="pill pill-blue">{cand["Status"]}</span>', unsafe_allow_html=True)
-            with cc3:
-                if st.button("📅 Send Calendly Link", key=f"cal_{cid}"):
-                    st.success(f"Email sent to {cand['Email']} with booking link ✅")
-
-    with tab2:
-        g1, g2 = st.columns(2)
-        with g1:
-            fig1 = px.pie(df, names="Status", title="Breakdown by Status", hole=0.5,
-                          color_discrete_sequence=px.colors.sequential.Purp)
-            fig1.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
-            st.plotly_chart(fig1, use_container_width=True)
-        with g2:
-            fig2 = px.histogram(df, x="AI Score", nbins=15, title="AI Score Distribution",
-                                color_discrete_sequence=["#8e44ad"])
-            fig2.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
-            st.plotly_chart(fig2, use_container_width=True)
-
-        g3, g4 = st.columns(2)
-        with g3:
-            by_poste = df.groupby("Target Position")["AI Score"].mean().reset_index().sort_values("AI Score")
-            fig3 = px.bar(by_poste, x="AI Score", y="Target Position", orientation="h", title="Average Score by Position",
-                         color_discrete_sequence=["#3498db"])
-            fig3.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
-            st.plotly_chart(fig3, use_container_width=True)
-        with g4:
-            by_ville = df["City"].value_counts().reset_index()
-            by_ville.columns = ["City", "Count"]
-            fig4 = px.bar(by_ville, x="City", y="Count", title="Candidates by City",
-                         color_discrete_sequence=["#2ecc71"])
-            fig4.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="white")
-            st.plotly_chart(fig4, use_container_width=True)
-
+    
+        
 # ============================================================
 # PAGE 5  SCHEDULING
 # ============================================================
-elif page == "📅 Automated Scheduling":
-    st.markdown("## 📅 Automated Interview Scheduling")
-    st.caption("As soon as a candidate exceeds the score threshold, the system automatically suggests an interview slot.")
-
-    df = load_candidates()
-    qualified = df[df["AI Score"] >= 75].sort_values("AI Score", ascending=False)
-
-    st.markdown(f"### 🎯 {len(qualified)} Qualified Candidates (Score ≥ 75)")
-
-    calendly_link = st.text_input("Agency Calendly Link (Configure once)", value="https://calendly.com/your-agency/30min-interview")
-
-    for _, cand in qualified.head(8).iterrows():
-        with st.container():
-            c1, c2, c3 = st.columns([3, 1, 1])
-            c1.markdown(f"**{cand['Name']}**  {cand['Target Position']} · {cand['City']}")
-            c2.markdown(f'<span class="pill pill-green">{cand["AI Score"]}/100</span>', unsafe_allow_html=True)
-            with c3:
-                if st.button("Send Invitation", key=f"invite_{cand['ID']}"):
-                    st.toast(f"📧 Email sent to {cand['Name']} with {calendly_link}")
-            st.markdown("<hr style='margin:0.3rem 0; opacity:0.15'>", unsafe_allow_html=True)
-
-    st.markdown("### ✉️ Auto-Email Preview Sent to Candidate")
-    st.markdown("""
-    <div class="card">
-    <b>Subject: Your application caught our attention! 🎉</b><br><br>
-    Hello [First Name],<br><br>
-    We have received your CV for the [Position] role. After analyzing your profile, 
-    we would like to discuss your experience in a short interview.<br><br>
-    👉 Please choose a time slot that works for you via this link: <i>[Calendly Link]</i><br><br>
-    Talk soon,<br>
-    The Recruitment Team
-    </div>
-    """, unsafe_allow_html=True)
 
 # ============================================================
 # PAGE 6  PRICING & TIMELINE
@@ -695,23 +603,5 @@ elif page == "💰 Cost & Timeline":
 
     st.caption("💡 Indicative rates to be adjusted based on the target market and actual client complexity.")
 
-    st.markdown("### 📅 Deployment Timeline (Pro Package)")
-    today = datetime.now()
-    phases = [
-        ("Scoping & API Access", today, today + timedelta(days=3)),
-        ("Gmail/Outlook Connection + CV Extraction", today + timedelta(days=3), today + timedelta(days=8)),
-        ("AI Engine Integration + Scoring Prompts", today + timedelta(days=8), today + timedelta(days=14)),
-        ("Database & Talent Pool Setup", today + timedelta(days=14), today + timedelta(days=18)),
-        ("HR Dashboard Development", today + timedelta(days=18), today + timedelta(days=23)),
-        ("Calendly & Auto-Email Integration", today + timedelta(days=23), today + timedelta(days=26)),
-        ("Testing & Production Launch", today + timedelta(days=26), today + timedelta(days=30)),
-    ]
-    gantt_df = pd.DataFrame(phases, columns=["Phase", "Start", "End"])
-    fig = px.timeline(gantt_df, x_start="Start", x_end="End", y="Phase", color="Phase",
-                      color_discrete_sequence=px.colors.qualitative.Bold)
-    fig.update_yaxes(autorange="reversed")
-    fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="white",
-                      showlegend=False, height=380)
-    st.plotly_chart(fig, use_container_width=True)
 
 st.markdown('<div class="footer-note">RecruitAI Pro  Sales demo generated with Streamlit · Not connected to real live data</div>', unsafe_allow_html=True)
