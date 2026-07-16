@@ -367,7 +367,8 @@ page = st.sidebar.radio(
         "💰 Cost & Timeline",
     ],
 )
-
+if st.sidebar.button("🧠 Try AI Scoring Demo", use_container_width=True):
+    page = "🧠 AI Scoring Demo"
 # Optional: API Settings for demo purposes
 
 st.sidebar.markdown("---")
