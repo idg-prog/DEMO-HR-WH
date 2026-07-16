@@ -469,7 +469,7 @@ elif page == "🧠 AI Scoring Demo":
 
     with col2:
         st.markdown("#### 📄 Candidate CV")
-        source = st.radio("CV Source", ["Use a sample", "Upload file (PDF/DOCX/TXT)"], horizontal=True)
+        source = st.radio("CV Source", ["Upload file (PDF/DOCX/TXT)"], horizontal=True)
         if source == "Use a sample":
             cand_choice = st.selectbox("Choose a sample candidate", list(SAMPLE_RESUMES.keys()))
             resume_text = st.text_area("CV Content", value=SAMPLE_RESUMES[cand_choice], height=220)
@@ -555,7 +555,7 @@ elif page == "🗂️ Talent Pool & Dashboard":
     k3.markdown(f'<div class="metric-card"><div class="val">{(df["Status"]=="Interview Scheduled").sum()}</div><div class="lbl">Interviews Set</div></div>', unsafe_allow_html=True)
     k4.markdown(f'<div class="metric-card"><div class="val">{round(df["AI Score"].mean())}%</div><div class="lbl">Avg AI Score</div></div>', unsafe_allow_html=True)
 
-    st.markdown("### 📋 All Candidates")
+    st.markdown("### All Candidates")
     # Filters
     col_f1, col_f2, col_f3 = st.columns(3)
     p_filter = col_f1.multiselect("Filter by Position", df["Target Position"].unique())
