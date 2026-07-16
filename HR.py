@@ -327,7 +327,7 @@ if page == "🏠 Solution Overview":
     st.markdown("""
     <div class="hero">
         <h1>🎯 RecruitAI Pro</h1>
-        <p>Complete CV sorting automation using Artificial Intelligence  from email reception 
+        <p>Complete CV sorting automation using Artificial Intelligence <br>from email reception 
         to interview scheduling, without manual intervention.</p>
     </div>
     """, unsafe_allow_html=True)
