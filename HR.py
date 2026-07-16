@@ -321,13 +321,9 @@ page = st.sidebar.radio(
     ],
 )
 
-with st.sidebar.expander("⚙️ Mode Démo Live (optionnel)"):
-    st.caption("Branche une vraie clé API pour scorer un CV en direct pendant la démo. Rien n'est stocké.")
-    ai_provider = st.selectbox("Fournisseur IA", ["Aucun (moteur local gratuit)", "Claude (Anthropic)", "OpenAI (GPT)", "Gemini (Google)"])
-    ai_key = st.text_input("Clé API", type="password") if ai_provider != "Aucun (moteur local gratuit)" else None
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Proposé par **Anas** · AI Automation Engineer\nContact commercial : votre-email@domaine.com")
+st.sidebar.caption("Proposé par **Anas** · AI Automation Engineer\nContact commercial : anaslachhab666@gmail.com \nWhatsapp : +212654615222")
 
 # ============================================================
 # PAGE 1 — APERÇU
@@ -687,8 +683,8 @@ elif page == "💰 Coût & Délais":
     st.markdown("### 📦 Formules")
     p1, p2, p3 = st.columns(3)
     plans = [
-        ("Starter", "15 000 MAD", "Connexion Gmail OU Outlook, scoring IA, CVthèque simple (Google Sheets/Airtable), dashboard Streamlit basique.", "2 semaines"),
-        ("Pro", "30 000 MAD", "Gmail + Outlook + site carrière, base de données PostgreSQL, dashboard avancé, intégration Calendly automatique, emails de réponse auto.", "3 à 4 semaines"),
+        ("Starter", "500 $", "Connexion Gmail OU Outlook, scoring IA, CVthèque simple (Google Sheets/Airtable), dashboard Streamlit basique.", "2 semaines"),
+        ("Pro", "1000 $", "Gmail + Outlook + site carrière, base de données PostgreSQL, dashboard avancé, intégration Calendly automatique, emails de réponse auto.", "3 à 4 semaines"),
         ("Enterprise", "Sur devis", "Multi-agences, multi-postes, intégration ATS/CRM existant (Odoo, etc.), tableaux de bord personnalisés, support prioritaire.", "5 à 8 semaines"),
     ]
     for col, (name, price, desc, delay) in zip([p1, p2, p3], plans):
@@ -722,29 +718,5 @@ elif page == "💰 Coût & Délais":
     fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="white",
                       showlegend=False, height=380)
     st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("### 🧮 Calculateur de coût mensuel & ROI")
-    c1, c2 = st.columns(2)
-    with c1:
-        volume = st.slider("Nombre de CV analysés / mois", 50, 5000, 500, step=50)
-        cost_per_cv = st.slider("Coût API IA par CV (MAD)", 0.05, 0.5, 0.15, step=0.01)
-        hosting = st.slider("Coût hébergement / maintenance mensuel (MAD)", 0, 2000, 300, step=50)
-    with c2:
-        minutes_saved = st.slider("Minutes économisées par CV (tri manuel)", 1, 15, 5)
-        hr_hourly_cost = st.slider("Coût horaire chargé RH (MAD)", 50, 300, 120, step=10)
-
-    api_cost = volume * cost_per_cv
-    monthly_cost = api_cost + hosting
-    time_saved_hours = (volume * minutes_saved) / 60
-    money_saved = time_saved_hours * hr_hourly_cost
-    net_gain = money_saved - monthly_cost
-
-    r1, r2, r3, r4 = st.columns(4)
-    r1.markdown(f'<div class="metric-card"><div class="val">{monthly_cost:,.0f} MAD</div><div class="lbl">Coût mensuel solution</div></div>', unsafe_allow_html=True)
-    r2.markdown(f'<div class="metric-card"><div class="val">{time_saved_hours:,.0f} h</div><div class="lbl">Temps RH économisé/mois</div></div>', unsafe_allow_html=True)
-    r3.markdown(f'<div class="metric-card"><div class="val">{money_saved:,.0f} MAD</div><div class="lbl">Valeur du temps économisé</div></div>', unsafe_allow_html=True)
-    r4.markdown(f'<div class="metric-card"><div class="val" style="color:{"#2ecc71" if net_gain>0 else "#e74c3c"}">{net_gain:,.0f} MAD</div><div class="lbl">Gain net mensuel estimé</div></div>', unsafe_allow_html=True)
-
-    st.caption("⚠️ Estimations à but commercial/pédagogique, à ajuster selon les tarifs réels des API (OpenAI/Anthropic/Google) et le contexte du client.")
 
 st.markdown('<div class="footer-note">RecruitAI Pro — Démo commerciale générée avec Streamlit · Non connecté à des données réelles</div>', unsafe_allow_html=True)
