@@ -372,6 +372,20 @@ if st.sidebar.button("🧠 Try AI Scoring FREE", use_container_width=True):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Presented by **Anas** · AI Automation Engineer\nContact: anaslachhab666@gmail.com \nWhatsapp: +212654615222")
+st.sidebar.divider()
+
+# Contact Buttons
+st.sidebar.link_button(
+    "📧 Contact Me",
+    "mailto:your@email.com",
+    use_container_width=True
+)
+
+st.sidebar.link_button(
+    "💬 WhatsApp",
+    "https://wa.me/212600000000",  # Replace with your WhatsApp number
+    use_container_width=True
+)
 
 # ============================================================
 # PAGE 1  OVERVIEW
