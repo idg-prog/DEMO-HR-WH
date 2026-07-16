@@ -316,9 +316,6 @@ page = st.sidebar.radio(
 )
 
 # Optional: API Settings for demo purposes
-st.sidebar.markdown("---")
-ai_provider = st.sidebar.selectbox("AI Model (Demo)", ["None (Free Local Engine)", "OpenAI (GPT)", "Claude (Anthropic)", "Gemini (Google)"])
-ai_key = st.sidebar.text_input("API Key (Optional)", type="password")
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Presented by **Anas** · AI Automation Engineer\nContact: anaslachhab666@gmail.com \nWhatsapp: +212654615222")
