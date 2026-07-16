@@ -96,6 +96,59 @@ PRENOMS = ["Youssef", "Salma", "Amine", "Sara", "Karim", "Nour", "Omar", "Imane"
            "Adam", "Hiba", "Rayan", "Lina", "Zakaria", "Kenza", "Ismail", "Douaa", "Anas", "Fatima"]
 NOMS = ["El Amrani", "Bennani", "Chraibi", "Idrissi", "Tazi", "Berrada", "Fassi", "Alaoui", "Cherkaoui", "Lahlou"]
 
+
+
+def call_deepseek_api(resume_text, job_desc):
+    """Score a CV against a job description using the DeepSeek API."""
+    api_key = st.secrets.get("DEEPSEEK_API_KEY")
+    if not api_key:
+        st.error("⚠️ No DeepSeek API key found in Streamlit secrets (DEEPSEEK_API_KEY).")
+        return None
+
+    prompt = f"""You are an expert recruitment assistant. Analyze this candidate's CV against the job description below.
+
+Extract candidate information AND score the match. Reply STRICTLY in valid JSON with no surrounding text, backticks, or markdown, using exactly these keys:
+
+{{
+  "name": "candidate full name or 'Not found'",
+  "country": "candidate country/location or 'Not found'",
+  "email": "candidate email or 'Not found'",
+  "phone": "candidate phone number or 'Not found'",
+  "education_level": "highest degree/education level found",
+  "experience_years": integer (estimated total years of relevant experience),
+  "score": integer between 0 and 100 (overall match score),
+  "verdict": "short verdict, e.g. Highly Recommended / Consider / Not a strong match",
+  "matched_skills": ["list", "of", "matched skills"],
+  "missing_skills": ["list", "of", "missing skills"],
+  "why": "2-4 sentences explaining the score, referencing specific skills, experience and education alignment"
+}}
+
+JOB DESCRIPTION:
+{job_desc}
+
+CANDIDATE CV:
+{resume_text}
+"""
+
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        resp = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.2,
+            max_tokens=800,
+        )
+        raw = resp.choices[0].message.content
+        cleaned = re.sub(r"^```json|```$", "", raw.strip(), flags=re.MULTILINE).strip()
+        data = json.loads(cleaned)
+        data["engine"] = "Live AI — DeepSeek"
+        return data
+    except Exception as e:
+        st.error(f"⚠️ DeepSeek API call failed: {e}")
+        return None
+
+
 @st.cache_data
 def load_candidates(n=24):
     random.seed(42)
@@ -454,51 +507,55 @@ elif page == "🏗️ Technical Architecture":
 # ============================================================
 # PAGE 3  DEMO SCORING
 # ============================================================
+# ============================================================
+# PAGE 3 — DEMO SCORING
+# ============================================================
 elif page == "🧠 AI Scoring Demo":
-    st.markdown("## 🧠 Interactive Demo  AI CV Scoring")
-    st.caption("This page simulates what the system would see in real-time after receiving a CV via email.")
+    st.markdown("## 🧠 Interactive Demo — AI CV Scoring (DeepSeek)")
+    st.caption("Upload a candidate's CV (PDF or DOCX) and write the job description manually to run a live DeepSeek analysis.")
 
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("#### 📋 Job Description")
-        job_choice = st.selectbox("Choose a sample job", list(SAMPLE_JOBS.keys()) + ["✏️ Paste my own job description"])
-        if job_choice == "✏️ Paste my own job description":
-            job_desc = st.text_area("Job Description", height=220, placeholder="Paste job description here...")
-        else:
-            job_desc = st.text_area("Job Description", value=SAMPLE_JOBS[job_choice], height=220)
+        job_desc = st.text_area(
+            "Write the job description",
+            height=280,
+            placeholder="Paste or write the job description here (required skills, experience, degree, languages, etc.)...",
+        )
 
     with col2:
         st.markdown("#### 📄 Candidate CV")
-        source = st.radio("CV Source", ["Upload file (PDF/DOCX/TXT)"], horizontal=True)
-        if source == "Use a sample":
-            cand_choice = st.selectbox("Choose a sample candidate", list(SAMPLE_RESUMES.keys()))
-            resume_text = st.text_area("CV Content", value=SAMPLE_RESUMES[cand_choice], height=220)
-        else:
-            uploaded = st.file_uploader("Load a CV", type=["pdf", "docx", "txt"])
-            resume_text = extract_text_from_upload(uploaded) if uploaded else ""
-            if resume_text:
-                st.text_area("Extracted Text", value=resume_text, height=220)
+        uploaded = st.file_uploader("Upload CV (PDF or DOCX only)", type=["pdf", "docx"])
+        resume_text = ""
+        if uploaded:
+            resume_text = extract_text_from_upload(uploaded)
+            with st.expander("📃 Extracted CV Text (preview)"):
+                st.text_area("Extracted Text", value=resume_text, height=200, disabled=True)
 
     threshold = st.slider("🎯 Auto-recommendation Threshold (min score to propose interview)", 0, 100, 70)
 
     if st.button("🚀 Launch AI Analysis", type="primary", use_container_width=True):
-        if not job_desc or not resume_text:
-            st.error("Please provide both a job description and a CV.")
+        if not job_desc.strip():
+            st.error("Please write a job description.")
+        elif not uploaded:
+            st.error("Please upload a CV in PDF or DOCX format.")
+        elif not resume_text.strip():
+            st.error("Could not extract any text from the uploaded CV.")
         else:
-            with st.spinner("Analyzing..."):
-                result = None
-                if ai_provider != "None (Free Local Engine)" and ai_key:
-                    result = try_ai_scoring(resume_text, job_desc, ai_provider, ai_key)
-                if result is None:
-                    result = score_resume_local(resume_text, job_desc)
+            with st.spinner("Analyzing with DeepSeek..."):
+                result = call_deepseek_api(resume_text, job_desc)
+
+            if result is None:
+                st.stop()
 
             st.markdown("---")
+
             r1, r2 = st.columns([1, 2])
             with r1:
                 fig = go.Figure(go.Indicator(
                     mode="gauge+number",
-                    value=result["score"],
-                    title={"text": "Relevance Score"},
+                    value=result.get("score", 0),
+                    title={"text": "Relevance Score / 100"},
                     gauge={
                         "axis": {"range": [0, 100]},
                         "bar": {"color": "#8e44ad"},
@@ -513,13 +570,26 @@ elif page == "🧠 AI Scoring Demo":
                 fig.update_layout(height=280, margin=dict(t=40, b=10), paper_bgcolor="rgba(0,0,0,0)", font_color="white")
                 st.plotly_chart(fig, use_container_width=True)
 
-                pill_class = "pill-green" if result["score"] >= 75 else "pill-orange" if result["score"] >= 50 else "pill-red"
-                st.markdown(f'<span class="pill {pill_class}">{result["verdict"]}</span>', unsafe_allow_html=True)
-                st.caption(f"🔧 {result['engine']}")
+                score = result.get("score", 0)
+                pill_class = "pill-green" if score >= 75 else "pill-orange" if score >= 50 else "pill-red"
+                st.markdown(f'<span class="pill {pill_class}">{result.get("verdict", "")}</span>', unsafe_allow_html=True)
+                st.caption(f"🔧 {result.get('engine', 'DeepSeek')}")
 
             with r2:
+                st.markdown("#### 🪪 Candidate Information")
+                info_cols = st.columns(2)
+                with info_cols[0]:
+                    st.markdown(f"**👤 Name:** {result.get('name', 'Not found')}")
+                    st.markdown(f"**🌍 Country:** {result.get('country', 'Not found')}")
+                    st.markdown(f"**📧 Email:** {result.get('email', 'Not found')}")
+                with info_cols[1]:
+                    st.markdown(f"**📞 Phone:** {result.get('phone', 'Not found')}")
+                    st.markdown(f"**🎓 Education Level:** {result.get('education_level', 'Not found')}")
+                    st.markdown(f"**💼 Experience:** {result.get('experience_years', 'Not found')} year(s)")
+
                 st.markdown("#### 💬 AI Justification")
-                st.info(result["why"])
+                st.info(result.get("why", "No explanation provided."))
+
                 cc1, cc2 = st.columns(2)
                 with cc1:
                     st.markdown("**✅ Matching Skills**")
@@ -537,11 +607,10 @@ elif page == "🧠 AI Scoring Demo":
                         st.caption("None")
 
                 st.markdown("#### 📌 Automatic Action Triggered")
-                if result["score"] >= threshold:
-                    st.success(f"✅ Score above threshold → **Calendly link automatically sent** to candidate + HR notification.")
+                if score >= threshold:
+                    st.success("✅ Score above threshold → **Calendly link automatically sent** to candidate + HR notification.")
                 else:
-                    st.warning(f"❌ Score below threshold → candidate **archived in Talent Pool** + auto-rejection email sent.")
-
+                    st.warning("❌ Score below threshold → candidate **archived in Talent Pool** + auto-rejection email sent.")
 # ============================================================
 # PAGE 4  TALENT POOL
 # ============================================================
