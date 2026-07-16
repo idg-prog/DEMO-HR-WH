@@ -363,11 +363,10 @@ page = st.sidebar.radio(
         "🏠 Solution Overview",
         "🏗️ Technical Architecture",
         "🗂️ Talent Pool & Dashboard",
-        "🧠 AI Scoring Demo",
         "💰 Cost & Timeline",
     ],
 )
-if st.sidebar.button("🧠 Try AI Scoring Demo", use_container_width=True):
+if st.sidebar.button("🧠 Try AI Scoring FREE", use_container_width=True):
     page = "🧠 AI Scoring Demo"
 # Optional: API Settings for demo purposes
 
