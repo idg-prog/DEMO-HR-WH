@@ -14,7 +14,7 @@ import random
 # PAGE CONFIG
 # ============================================================
 st.set_page_config(
-    page_title="RecruitAI Pro — Automated CV Screening",
+    page_title="RecruitAI Pro  Automated CV Screening",
     page_icon="🎯",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -84,7 +84,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================================
-# MOCK DATA — TALENT POOL
+# MOCK DATA  TALENT POOL
 # ============================================================
 CITIES = ["Casablanca", "Rabat", "London", "New York", "Dubai", "Abu Dhabi", "Paris", "Singapore"]
 POSTES = ["Full Stack Developer", "Business Developer", "Senior Accountant", "IT Project Manager",
@@ -134,7 +134,7 @@ Driving license preferred, availability for regional travel.""",
 }
 
 SAMPLE_RESUMES = {
-    "Candidate A — Strong Dev Profile": """Youssef El Amrani
+    "Candidate A  Strong Dev Profile": """Youssef El Amrani
 Casablanca, Morocco | youssef.elamrani@email.com
 Computer Engineer, MSc (ENSIAS)
 
@@ -146,7 +146,7 @@ Experience:
 Skills: Python, JavaScript, React, SQL, Docker, Git, FastAPI, REST APIs
 Languages: French (Native), English (Professional), Arabic (Native)
 """,
-    "Candidate B — Junior Profile": """Sara Bennani
+    "Candidate B  Junior Profile": """Sara Bennani
 Rabat, Morocco | sara.bennani@email.com
 BSc in Computer Science
 
@@ -157,7 +157,7 @@ Experience:
 Skills: HTML, CSS, JavaScript, PHP, MySQL basics
 Languages: French (Native), English (Intermediate)
 """,
-    "Candidate C — Business Dev Profile": """Karim Tazi
+    "Candidate C  Business Dev Profile": """Karim Tazi
 Dubai, UAE | karim.tazi@email.com
 MBA, Business School
 
@@ -222,7 +222,7 @@ def score_resume_local(resume_text, job_desc):
         verdict = "Not a strong match"
 
     why = (
-        f"The candidate matches {len(matched)} out of {len(job_skills) if job_skills else '—'} key skills searched "
+        f"The candidate matches {len(matched)} out of {len(job_skills) if job_skills else ''} key skills searched "
         f"({', '.join(matched) if matched else 'no direct matches detected'}). "
         f"Detected experience: approximately {resume_years} year(s), compared to {job_years_req} year(s) required. "
         + (f"Missing skills to clarify in interview: {', '.join(missing)}." if missing else
@@ -236,7 +236,7 @@ def score_resume_local(resume_text, job_desc):
         "missing_skills": missing,
         "years_detected": resume_years,
         "why": why,
-        "engine": "Local Engine (Rules + Keyword Match) — Free, no API call",
+        "engine": "Local Engine (Rules + Keyword Match)  Free, no API call",
     }
 
 def try_ai_scoring(resume_text, job_desc, provider, api_key):
@@ -277,7 +277,7 @@ CANDIDATE CV:
 
         cleaned = re.sub(r"^```json|```$", "", raw.strip(), flags=re.MULTILINE).strip()
         data = json.loads(cleaned)
-        data["engine"] = f"Live AI — {provider}"
+        data["engine"] = f"Live AI  {provider}"
         data["years_detected"] = extract_years_experience(resume_text)
         return data
     except Exception as e:
@@ -301,7 +301,7 @@ def extract_text_from_upload(uploaded_file):
 # SIDEBAR NAVIGATION
 # ============================================================
 st.sidebar.markdown("## 🎯 RecruitAI Pro")
-st.sidebar.caption("Sales Demo — Automated CV Screening")
+st.sidebar.caption("Sales Demo  Automated CV Screening")
 
 page = st.sidebar.radio(
     "Navigation",
@@ -321,13 +321,13 @@ st.sidebar.markdown("---")
 st.sidebar.caption("Presented by **Anas** · AI Automation Engineer\nContact: anaslachhab666@gmail.com \nWhatsapp: +212654615222")
 
 # ============================================================
-# PAGE 1 — OVERVIEW
+# PAGE 1  OVERVIEW
 # ============================================================
 if page == "🏠 Solution Overview":
     st.markdown("""
     <div class="hero">
         <h1>🎯 RecruitAI Pro</h1>
-        <p>Complete CV sorting automation using Artificial Intelligence — from email reception 
+        <p>Complete CV sorting automation using Artificial Intelligence  from email reception 
         to interview scheduling, without manual intervention.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -382,11 +382,11 @@ if page == "🏠 Solution Overview":
         """, unsafe_allow_html=True)
 
 # ============================================================
-# PAGE 2 — ARCHITECTURE
+# PAGE 2  ARCHITECTURE
 # ============================================================
 elif page == "🏗️ Technical Architecture":
     st.markdown("## 🏗️ Technical Architecture")
-    st.caption("Overview of the automation pipeline — from CV reception to scheduling.")
+    st.caption("Overview of the automation pipeline  from CV reception to scheduling.")
 
     dot = """
     digraph G {
@@ -442,7 +442,7 @@ elif page == "🏗️ Technical Architecture":
     with tabs[3]:
         st.markdown("""
         - Dashboard using **Streamlit / Power BI / Looker Studio** connected directly to the database.
-        - Filters by position, city, score, status — pipeline view for HR tracking.
+        - Filters by position, city, score, status  pipeline view for HR tracking.
         - Secure web access, usable by the entire recruitment team.
         """)
     with tabs[4]:
@@ -453,10 +453,10 @@ elif page == "🏗️ Technical Architecture":
         """)
 
 # ============================================================
-# PAGE 3 — DEMO SCORING
+# PAGE 3  DEMO SCORING
 # ============================================================
 elif page == "🧠 AI Scoring Demo":
-    st.markdown("## 🧠 Interactive Demo — AI CV Scoring")
+    st.markdown("## 🧠 Interactive Demo  AI CV Scoring")
     st.caption("This page simulates what the system would see in real-time after receiving a CV via email.")
 
     col1, col2 = st.columns(2)
@@ -544,11 +544,11 @@ elif page == "🧠 AI Scoring Demo":
                     st.warning(f"❌ Score below threshold → candidate **archived in Talent Pool** + auto-rejection email sent.")
 
 # ============================================================
-# PAGE 4 — TALENT POOL
+# PAGE 4  TALENT POOL
 # ============================================================
 elif page == "🗂️ Talent Pool & Dashboard":
     st.markdown("## 🗂️ Talent Pool & HR Dashboard")
-    st.caption("Structured database — automatically updated by AI analysis of every new CV.")
+    st.caption("Structured database  automatically updated by AI analysis of every new CV.")
 
     df = load_candidates()
 
@@ -587,9 +587,9 @@ elif page == "🗂️ Talent Pool & Dashboard":
         st.caption(f"Showing {len(filtered)} candidate(s) out of {len(df)}")
 
         st.markdown("#### 🔍 Detailed Candidate View")
-        pick = st.selectbox("Select a candidate", filtered["Name"] + " — " + filtered["ID"])
+        pick = st.selectbox("Select a candidate", filtered["Name"] + "  " + filtered["ID"])
         if pick:
-            cid = pick.split("—")[-1].strip()
+            cid = pick.split("")[-1].strip()
             cand = df[df["ID"] == cid].iloc[0]
             cc1, cc2, cc3 = st.columns([2, 2, 1])
             with cc1:
@@ -633,7 +633,7 @@ elif page == "🗂️ Talent Pool & Dashboard":
             st.plotly_chart(fig4, use_container_width=True)
 
 # ============================================================
-# PAGE 5 — SCHEDULING
+# PAGE 5  SCHEDULING
 # ============================================================
 elif page == "📅 Automated Scheduling":
     st.markdown("## 📅 Automated Interview Scheduling")
@@ -649,7 +649,7 @@ elif page == "📅 Automated Scheduling":
     for _, cand in qualified.head(8).iterrows():
         with st.container():
             c1, c2, c3 = st.columns([3, 1, 1])
-            c1.markdown(f"**{cand['Name']}** — {cand['Target Position']} · {cand['City']}")
+            c1.markdown(f"**{cand['Name']}**  {cand['Target Position']} · {cand['City']}")
             c2.markdown(f'<span class="pill pill-green">{cand["AI Score"]}/100</span>', unsafe_allow_html=True)
             with c3:
                 if st.button("Send Invitation", key=f"invite_{cand['ID']}"):
@@ -670,7 +670,7 @@ elif page == "📅 Automated Scheduling":
     """, unsafe_allow_html=True)
 
 # ============================================================
-# PAGE 6 — PRICING & TIMELINE
+# PAGE 6  PRICING & TIMELINE
 # ============================================================
 elif page == "💰 Cost & Timeline":
     st.markdown("## 💰 Implementation Cost & Delivery Timeline")
@@ -714,4 +714,4 @@ elif page == "💰 Cost & Timeline":
                       showlegend=False, height=380)
     st.plotly_chart(fig, use_container_width=True)
 
-st.markdown('<div class="footer-note">RecruitAI Pro — Sales demo generated with Streamlit · Not connected to real live data</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer-note">RecruitAI Pro  Sales demo generated with Streamlit · Not connected to real live data</div>', unsafe_allow_html=True)
